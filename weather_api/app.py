@@ -1,61 +1,19 @@
-"""from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route('/weather')
-def get_weather():
-    # Replace this with actual weather data fetching logic
-    weather_data = {
-        "temperature": 25,
-        "description": "Sunny",
-        "city": "New York"
-    }
-    return jsonify(weather_data)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-"""
-
-"""from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route('/weather')
-def get_weather():
-    # Replace this with actual weather data fetching logic
-    weather_data = {
-        "temperature": 25,
-        "description": "Sunny",
-        "city": "New York"
-    }
-    return jsonify(weather_data)
-
-@app.route('/')
-def welcome():
-    return "Welcome to the Weather API!"
-
-if __name__ == '__main__':
-    app.run(debug=True)
-    """
-    
-    
 import requests
-from flask import Flask, jsonify
-
-app = Flask(__name__)
 
 # OpenWeatherMap API key
 API_KEY = '7bd7e1ee73ea64b19afb8c9963a0c483'
 
-@app.route('/weather')
-def get_weather():
+def get_weather(city):
     # API URL for current weather
-    url = f'http://api.openweathermap.org/data/2.5/weather?q=New%20Delhi,IN&appid={API_KEY}&units=metric'
-    
+    url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric'
     
     # Fetch weather data
     response = requests.get(url)
     data = response.json()
+
+    if response.status_code != 200:
+        print("Failed to fetch weather data")
+        return
 
     # Extract relevant information
     weather_data = {
@@ -64,12 +22,10 @@ def get_weather():
         "city": data['name']
     }
     
-    return jsonify(weather_data)
+    print("Weather in", city)
+    print("Temperature:", weather_data["temperature"], "°C")
+    print("Description:", weather_data["description"])
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-    
-    
-    
-    
+    city = input("Enter city name: ")
+    get_weather(city)
